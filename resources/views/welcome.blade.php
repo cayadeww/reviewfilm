@@ -42,44 +42,6 @@
             </div>
         </div>
     </nav>
-    
-    <div class="container mt-4">
-        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="banner1.jpg" class="d-block w-100" alt="...">
-                </div>
-                <div class="carousel-item">
-                    <img src="banner2.jpg" class="d-block w-100" alt="...">
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            </button>
-        </div>
-    </div>
-    
-    <div class="container mt-5">
-        <h3>Now in Theaters</h3>
-        <div class="row">
-            <div class="col-md-2">
-                <img src="movie1.jpg" class="img-fluid" alt="...">
-                <p>Love Hurts</p>
-            </div>
-            <div class="col-md-2">
-                <img src="movie2.jpg" class="img-fluid" alt="...">
-                <p>Heart Eyes</p>
-            </div>
-            <div class="col-md-2">
-                <img src="movie3.jpg" class="img-fluid" alt="...">
-                <p>Companion</p>
-            </div>
-        </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
