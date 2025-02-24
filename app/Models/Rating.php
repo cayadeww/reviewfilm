@@ -9,7 +9,7 @@ class Rating extends Model
 {
     use HasFactory;
 
-    protected $table = 'ratings';
+    protected $table = 'rating';
     protected $fillable = ['id_film', 'id_users', 'rating'];
 
     // Relasi ke Film

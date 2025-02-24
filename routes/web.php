@@ -32,6 +32,8 @@ Route::middleware('auth')->group(function () {
 Route::prefix('user')->middleware(['auth','role:user'])->group(function(){
     Route::get('dashboard', [UdashboardController::class, 'index'])->name('user.dashboard');
     Route::get('/detail/{id}', [UdashboardController::class, 'show'])->name('detail');
+    Route::post('/film/{id}/rating', [UdashboardController::class, 'storeRating'])->name('rating.store');
+
 
 });
 // Rute untuk author
@@ -43,6 +45,7 @@ Route::prefix('author')->middleware(['auth', 'role:author'])->group(function () 
     Route::post('/films', [datafilmController::class, 'store'])->name('author.film.store');
     // Rute untuk menghapus film
     Route::delete('/films/{id}', [datafilmController::class, 'destroy'])->name('author.film.destroy');
+    Route::post('/film_pemeran/store', [FilmPemeranController::class, 'store'])->name('fp.store');
 });
     
 // Admin Routes

@@ -35,7 +35,7 @@
                     {{-- User --}}
                     @elseif(Auth::check() && Auth::user()->role == 'user')
                         <x-nav-link href="{{ route('user.dashboard') }}" :active="request()->routeIs('user.dashboard')">
-                            {{ __('Dashboard') }}
+                            {{ __('Review Filim') }}
                         </x-nav-link>
             
                     {{-- Guest (Not logged in) --}}
