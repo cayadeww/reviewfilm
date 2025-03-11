@@ -57,20 +57,30 @@
                          <td class="border border-gray-400 px-6 py-4 text-center">{{ $film->judul }}</td>
                          <td class="border border-gray-400 px-6 py-4 text-center">{{ $film->genre->nama_genre }}</td>
                          <td class="border border-gray-400 px-6 py-4 text-center">{{ $film->kategori->kategori }}</td>
-                         <td class="border border-gray-400 px-6 py-4 text-center">
-                            <img src="{{ asset('storage/' . $film->gambar) }}" alt="{{ $film->judul }}" style="width: 100px; height: auto;">
+                         <td class="border border-gray-400 px-6 py-4 flex items-center justify-center">
+                            <img src="{{ asset('storage/' . $film->gambar) }}" alt="{{ $film->judul }}" style="width: 50px; height: auto;">
                         </td>
-                         <td class="border border-gray-400 px-6 py-4 text-center">
-                            <a href="{{ route('film.show', $film->id) }}" class="bg-blue-500 text-white hover:bg-blue-600 px-4 py-2 rounded-md shadow-sm transition-all duration-150">
-                                Detail
-                            </a>                           
-                            <button class="bg-purple-500 text-white hover:bg-purple-600 px-4 py-2 rounded-md shadow-sm transition-all duration-150">Edit</button>
-                            <form action="{{ route('film.destroy', $film->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method ('DELETE')
-                                <button class="bg-pink-500 text-white hover:bg-pink-600 px-4 py-2 rounded-md shadow-sm transition-all duration-150" type="submit">Hapus</button>
-                            </form>
+                        <td class="border border-gray-400 px-6 py-4 text-center">
+                            <div class="flex justify-center space-x-2">
+                                <a href="{{ route('film.show', $film->id) }}" 
+                                   class="flex items-center bg-blue-500 text-white hover:bg-blue-600 px-4 py-2 rounded-md shadow-sm transition-all duration-150">
+                                    Detail
+                                </a>
+                                
+                                <button class="flex items-center bg-purple-500 text-white hover:bg-purple-600 px-4 py-2 rounded-md shadow-sm transition-all duration-150">
+                                    Edit
+                                </button>
+                                
+                                <form action="{{ route('film.destroy', $film->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method ('DELETE')
+                                    <button class="flex items-center bg-pink-500 text-white hover:bg-pink-600 px-4 py-2 rounded-md shadow-sm transition-all duration-150" type="submit">
+                                        Hapus
+                                    </button>
+                                </form>
+                            </div>
                         </td>
+                        
                     </tr>
                     @endforeach
                 </tbody>

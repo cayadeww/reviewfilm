@@ -23,7 +23,7 @@ class Komen extends Model
     {
         return $this->belongsTo(User::class, 'id_users');
     }
-
+    
     // Validasi agar komentar hanya bisa dibuat jika ada rating
     public static function boot()
     {

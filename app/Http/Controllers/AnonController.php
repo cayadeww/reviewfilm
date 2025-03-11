@@ -1,43 +1,52 @@
 <?php
-namespace App\Http\Controllers\user;
 
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
 use App\Models\Film;
 use App\Models\Genre;
 use App\Models\Kategori;
-use App\Models\Rating;
 use App\Models\Komen;
-use Illuminate\Http\Request;
+use App\Models\Rating;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
-class UdashboardController extends Controller
+
+class AnonController extends Controller
 {
+    // Menampilkan halaman utama dengan daftar film
     public function index(Request $request)
     {
+       
         $query = Film::query();
-    
-        if ($request->filled('search')) {
+
+        if ($request->has('search') && $request->search != '') {
             $query->where('judul', 'like', '%' . $request->search . '%');
         }
-        
-        if ($request->filled('genre')) {
+
+        if ($request->has('genre') && $request->genre != '') {
             $query->whereHas('genre', function ($q) use ($request) {
-                $q->where('id', $request->genre); // Cocokkan dengan ID, bukan nama_genre
+                $q->where('id_genre', $request->genre);
             });
         }
-        
-        
-        if ($request->filled('kategori')) {
+
+        if ($request->has('kategori') && $request->kategori != '') {
             $query->where('id_kategori', $request->kategori);
         }
-        
-    
-        $films = $query->get();
+
+        $films = $query->paginate(10);
+
+        // Jika tidak ada filter, tampilkan semua data
+        if (!$request->has('search') && !$request->has('genre') && !$request->has('kategori')) {
+            $films = Film::paginate(10);
+        }
+
         $genres = Genre::all();
         $kategoris = Kategori::all();
-        
-        return view('user.dashboard', compact('films', 'genres', 'kategoris'));
+        return view('welcome', compact('films', 'genres', 'kategoris'));
     }
+
+    // Menampilkan detail film
     public function show($id)
     {
         $film = Film::with('genre')->findOrFail($id);
@@ -54,11 +63,8 @@ class UdashboardController extends Controller
             $embed_url = "https://www.youtube.com/embed/" . $match[1];
         }
     
-        return view('user.detail', compact('film', 'komentar', 'averageRating', 'embed_url'));
+        return view('detail', compact('film', 'komentar', 'averageRating', 'embed_url'));
     }
-    
-
-
     public function storeRating(Request $request, $film_id)
     {
         $request->validate([
@@ -92,3 +98,4 @@ class UdashboardController extends Controller
         return redirect()->back()->with('success', 'Rating dan komentar berhasil dikirim!');
     }
 }
+

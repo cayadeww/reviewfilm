@@ -33,7 +33,7 @@
                                     <button onclick="openEditModal({{ $author->id }}, '{{ $author->name }}', '{{ $author->email }}')" class="bg-purple-500 text-white hover:bg-purple-600 px-4 py-2 rounded-md shadow-sm transition-all duration-150 text-center">
                                         Edit
                                     </button>
-                                    <form action="{{ route('author.destroy', $author->id) }}" method="POST" class="inline">
+                                    <form action="{{ route('admin.author.destroy', $author->id) }}" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" onclick="return confirm('Apakah Anda yakin ingin menghapus author ini?')" class="bg-pink-500 text-white hover:bg-pink-600 px-4 py-2 rounded-md shadow-sm transition-all duration-150 text-center">
@@ -55,7 +55,7 @@
 <div id="modal" class="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center hidden">
     <div class="bg-pink-100 p-6 rounded-lg shadow-lg w-96">
         <h3 class="text-xl font-semibold mb-4">Tambah Author Baru</h3>
-        <form action="{{ route('author.store') }}" method="POST">
+        <form action="{{ route('admin.author.store') }}" method="POST">
             @csrf
             <div class="mb-4">
                 <label for="name" class="block text-gray-700">Nama</label>
@@ -122,7 +122,7 @@
         function openEditModal(id, name, email) {
             document.getElementById('edit_name').value = name;
             document.getElementById('edit_email').value = email;
-            document.getElementById('editForm').action = '/author/' + id; // Update the form action URL to the correct author
+            document.getElementById('editForm').action = "{{ route('admin.author.update', '') }}/" + id;
             document.getElementById('editModal').classList.remove('hidden');
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -7,6 +8,7 @@ use App\Models\Film;
 use App\Models\Genre;
 use App\Models\Kategori;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class FilmController extends Controller
 {
@@ -25,7 +27,7 @@ class FilmController extends Controller
         $film = Film::with(['genre', 'kategori'])->findOrFail($id);
         return view('admin.film.show', compact('film'));
     }
-    
+
 
     // Menyimpan film baru
     public function store(Request $request)
@@ -61,13 +63,24 @@ class FilmController extends Controller
     }
 
     // Menghapus film
+
+
     public function destroy($id)
     {
         $film = Film::findOrFail($id);
 
         // Pastikan hanya pemilik atau admin yang bisa menghapus
         if (Auth::user()->role == 'admin' || $film->id_users == Auth::id()) {
+            // Hapus gambar dari penyimpanan lokal
+            if ($film->gambar) {
+                if (Storage::exists('public/' . $film->gambar)) {
+                    Storage::delete('public/' . $film->gambar);
+                }
+            }
+
+            // Hapus data film dari database
             $film->delete();
+
             return redirect()->back()->with('success', 'Film berhasil dihapus!');
         } else {
             return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk menghapus film ini!');
