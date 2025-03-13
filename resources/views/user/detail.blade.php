@@ -39,9 +39,35 @@
                     </div>
                 </div>
                 @endif
-            </div>
+        @if (Auth::check() && !$userHasRated)
+                <form action="{{ route('rating.store', $film->id) }}" method="POST" class="mt-4">
+                    @csrf
+                    <div class="mt-4">
+                        <label for="rating" class="block font-semibold">Rating:</label>
+                        <div id="rating-stars" class="flex space-x-2 mt-2">
+                            <span class="star text-3xl cursor-pointer text-gray-400" data-value="1">★</span>
+                            <span class="star text-3xl cursor-pointer text-gray-400" data-value="2">★</span>
+                            <span class="star text-3xl cursor-pointer text-gray-400" data-value="3">★</span>
+                            <span class="star text-3xl cursor-pointer text-gray-400" data-value="4">★</span>
+                            <span class="star text-3xl cursor-pointer text-gray-400" data-value="5">★</span>
+                        </div>
+                        <input type="hidden" name="rating" id="rating" required>
+                    </div>
+            
+                    <div class="mt-4">
+                        <label class="block font-semibold">Komentar:</label>
+                        <textarea name="komen" rows="3" class="w-full border rounded px-3 py-2" required></textarea>
+                    </div>
+            
+                    <button type="submit" class="mt-4 bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">
+                        Kirim
+                    </button>
+                </form>
+            @else
+                <p class="mt-4 text-gray-500">Anda sudah memberikan rating untuk film ini.</p>
+            @endif
         </div>
-
+    </div>
         <!-- Komentar & Rating -->
         <div class="max-w-6xl mx-auto px-6 mt-10 bg-white p-6 rounded-lg shadow">
             <h2 class="text-2xl font-semibold text-gray-800">Komentar & Rating</h2>
@@ -77,4 +103,32 @@
         @endif
     </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+           let stars = document.querySelectorAll(".star");
+           let ratingInput = document.getElementById("rating");
+
+           if (stars.length > 0) { // Pastikan elemen ada sebelum diproses
+               stars.forEach(star => {
+                   star.addEventListener("click", function () {
+                       let rating = this.getAttribute("data-value");
+                       ratingInput.value = rating;
+
+                       stars.forEach(s => {
+                           s.classList.toggle("text-yellow-400", s.getAttribute("data-value") <= rating);
+                           s.classList.toggle("text-gray-400", s.getAttribute("data-value") > rating);
+                       });
+                   });
+               });
+
+               let savedRating = ratingInput.value;
+               if (savedRating > 0) {
+                   stars.forEach(s => {
+                       s.classList.toggle("text-yellow-400", s.getAttribute("data-value") <= savedRating);
+                       s.classList.toggle("text-gray-400", s.getAttribute("data-value") > savedRating);
+                   });
+               }
+           }
+       });
+   </script>  
 </x-app-layout>

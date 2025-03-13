@@ -111,7 +111,7 @@
         function openEditModal(id, name, email) {
             document.getElementById('edit_name').value = name;
             document.getElementById('edit_email').value = email;
-            document.getElementById('editForm').action = "{{ url('/user') }}/" + id;
+            document.getElementById('editForm').action = "{{ route('user.update', ':id') }}".replace(':id', id);
             document.getElementById('editModal').classList.remove('hidden');
         }
     

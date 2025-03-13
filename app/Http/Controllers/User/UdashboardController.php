@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\user;
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Film;
@@ -22,15 +22,13 @@ class UdashboardController extends Controller
         
         if ($request->filled('genre')) {
             $query->whereHas('genre', function ($q) use ($request) {
-                $q->where('id', $request->genre); // Cocokkan dengan ID, bukan nama_genre
+                $q->where('id', $request->genre);
             });
         }
-        
         
         if ($request->filled('kategori')) {
             $query->where('id_kategori', $request->kategori);
         }
-        
     
         $films = $query->get();
         $genres = Genre::all();
@@ -38,13 +36,13 @@ class UdashboardController extends Controller
         
         return view('user.dashboard', compact('films', 'genres', 'kategoris'));
     }
+
     public function show($id)
     {
-        $film = Film::with('genre')->findOrFail($id);
+        $film = Film::with(['genre', 'kategori', 'komens.user'])->findOrFail($id);
         $komentar = $film->komens()->latest()->get();
         $averageRating = $film->ratings()->avg('rating');
         
-        // Konversi URL YouTube ke format embed
         $url_trailer = $film->url_trailer;
         $embed_url = $url_trailer;
     
@@ -54,15 +52,15 @@ class UdashboardController extends Controller
             $embed_url = "https://www.youtube.com/embed/" . $match[1];
         }
     
-        return view('user.detail', compact('film', 'komentar', 'averageRating', 'embed_url'));
-    }
+        $userHasRated = Rating::where('id_film', $id)->where('id_users', Auth::id())->exists();
     
-
+        return view('user.detail', compact('film', 'komentar', 'averageRating', 'embed_url', 'userHasRated'));
+    }
 
     public function storeRating(Request $request, $film_id)
     {
         $request->validate([
-            'rating' => 'required|in:1,2,3,4,5',
+            'rating' => 'required|integer|min:1|max:5',
             'komen' => 'required|string|max:500',
         ]);
 
@@ -70,19 +68,16 @@ class UdashboardController extends Controller
             return redirect()->back()->with('error', 'Anda harus login untuk memberi rating!');
         }
 
-        // Cek apakah user sudah memberi rating
         if (Rating::where('id_film', $film_id)->where('id_users', Auth::id())->exists()) {
             return redirect()->back()->with('error', 'Anda sudah memberi rating untuk film ini!');
         }
 
-        // Simpan rating
         Rating::create([
             'id_film' => $film_id,
             'id_users' => Auth::id(),
             'rating' => $request->rating,
         ]);
 
-        // Simpan komentar
         Komen::create([
             'id_film' => $film_id,
             'id_users' => Auth::id(),
