@@ -12,22 +12,22 @@
                     <button onclick="openAddGenreModal()" class="bg-purple-500 text-white hover:bg-purple-600 px-4 py-2 rounded-md shadow-sm transition-all duration-150">
                         Tambah Genre
                     </button>
-                    <button onclick="showGenre()" class="bg-blue-500 text-white px-4 py-2 rounded">
+                    {{-- <button onclick="showAllGenre()" class="text-gray-600 hover:text-gray-800 transition-all duration-150">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z"/>
                         </svg>
-                    </button>
+                    </button> --}}
                 </div>
             
                 <div class="flex items-center space-x-2">
                     <button onclick="openAddCategoryModal()" class="bg-purple-700 text-white hover:bg-purple-800 px-4 py-2 rounded-md shadow-sm transition-all duration-150">
                         Tambah Kategori
                     </button>
-                    <button onclick="showAllKategoris()" class="text-gray-600 hover:text-gray-800 transition-all duration-150">
+                    {{-- <button onclick="showAllKategoris()" class="text-gray-600 hover:text-gray-800 transition-all duration-150">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z"/>
                         </svg>
-                    </button>
+                    </button> --}}
                 </div>
             
                 <button onclick="openAddFilmModal()" class="bg-pink-500 text-white hover:bg-pink-600 px-4 py-2 rounded-md shadow-sm transition-all duration-150">
@@ -42,7 +42,7 @@
             <table class="w-full mt-8 border border-gray-400 rounded-lg shadow-lg table-auto">
                 <thead class="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
                     <tr>
-                        <th class="border border-gray-400 px-4 py-2">ID</th>
+                        <th class="border border-gray-400 px-4 py-2">No</th>
                         <th class="border border-gray-400 px-4 py-2">Judul</th>
                         <th class="border border-gray-400 px-4 py-2">Genre</th>
                         <th class="border border-gray-400 px-4 py-2">Kategori</th>
@@ -51,13 +51,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($films as $film)
+                    @foreach($films as $index => $film)
                     <tr>
-                         <td class="border border-gray-400 px-6 py-4 text-center">{{ $film->id }}</td>
-                         <td class="border border-gray-400 px-6 py-4 text-center">{{ $film->judul }}</td>
-                         <td class="border border-gray-400 px-6 py-4 text-center">{{ $film->genre->nama_genre }}</td>
-                         <td class="border border-gray-400 px-6 py-4 text-center">{{ $film->kategori->kategori }}</td>
-                         <td class="border border-gray-400 px-6 py-4 flex items-center justify-center">
+                        <td class="border border-gray-400 px-6 py-4 text-center">{{ $index + 1 }}</td>
+                        <td class="border border-gray-400 px-6 py-4 text-center">{{ $film->judul }}</td>
+                        <td class="border border-gray-400 px-6 py-4 text-center">{{ $film->genre->nama_genre }}</td>
+                        <td class="border border-gray-400 px-6 py-4 text-center">{{ $film->kategori->kategori }}</td>
+                        <td class="border border-gray-400 px-6 py-4 flex items-center justify-center">
                             <img src="{{ asset('storage/' . $film->gambar) }}" alt="{{ $film->judul }}" style="width: 50px; height: auto;">
                         </td>
                         <td class="border border-gray-400 px-6 py-4 text-center">
@@ -66,11 +66,11 @@
                                    class="flex items-center bg-blue-500 text-white hover:bg-blue-600 px-4 py-2 rounded-md shadow-sm transition-all duration-150">
                                     Detail
                                 </a>
-                                
-                                <button class="flex items-center bg-purple-500 text-white hover:bg-purple-600 px-4 py-2 rounded-md shadow-sm transition-all duration-150">
+            
+                                <a href="{{ route('film.edit', $film->id) }}" class="flex items-center bg-purple-500 text-white hover:bg-purple-600 px-4 py-2 rounded-md shadow-sm transition-all duration-150">
                                     Edit
-                                </button>
-                                
+                                </a>
+            
                                 <form action="{{ route('film.destroy', $film->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method ('DELETE')
@@ -80,11 +80,11 @@
                                 </form>
                             </div>
                         </td>
-                        
                     </tr>
                     @endforeach
                 </tbody>
             </table>
+            
                         <!-- Modal Form Tambah Genre -->
                         <div id="addGenreModal" class="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center hidden">
                             <div class="bg-purple-100 p-6 rounded-lg shadow-lg w-96">
@@ -198,7 +198,7 @@
 <div id="addFilmPemeranModal" class="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center hidden">
     <div class="bg-white p-6 rounded-lg shadow-lg w-96">
         <h3 class="text-xl font-semibold mb-4">Tambah Pemeran Film</h3>
-        <form id="filmPemeranForm"action="{{ route('pemeran.store') }}" method="POST">
+        <form id="filmPemeranForm" action="{{ route('pemeran.store') }}" method="POST">
             @csrf
             <div class="mb-4">
                 <label for="id_film" class="block text-gray-700">Pilih Film</label>
@@ -211,8 +211,10 @@
 
             <div id="pemeranContainer">
                 <div class="mb-4 pemeran-input">
-                    <label for="nama_pemeran" class="block text-gray-700">Nama Pemeran</label>
-                    <input type="text" name="nama_pemeran[]" class="w-full px-4 py-2 border rounded-md" required>
+                    <label for="nama" class="block text-gray-700">Nama Pemeran</label>
+                    <input type="text" name="nama[]" class="w-full px-4 py-2 border rounded-md" required>
+                    <label for="pemeran" class="block text-gray-700">Peran</label>
+                    <input type="text" name="pemeran[]" class="w-full px-4 py-2 border rounded-md" required>
                 </div>
             </div>
 
@@ -234,6 +236,7 @@
         <button onclick="closeModal()" class="mt-4 px-4 py-2 bg-red-500 text-white rounded">Tutup</button>
     </div>
 </div>
+
 
 <script>
     function showGenre() {
@@ -280,47 +283,31 @@
         document.getElementById('addFilmModal').classList.add('hidden');
     }
     function openAddFilmPemeranModal() {
-        document.getElementById('addFilmPemeranModal').classList.remove('hidden');
-    }
-    
-    function closeAddFilmPemeranModal() {
-        document.getElementById('addFilmPemeranModal').classList.add('hidden');
-    }
-    
-    function addPemeranInput() {
-        let container = document.getElementById('pemeranContainer');
-        let div = document.createElement('div');
-        div.classList.add('flex', 'space-x-2', 'mb-2');
-        div.innerHTML = `
-            <input type="text" name="pemeran[]" class="w-full p-2 border rounded">
-            <button type="button" onclick="removePemeranInput(this)" class="bg-red-500 text-white px-2 py-1 rounded">-</button>
-        `;
-        container.appendChild(div);
-    }
-    
-    function removePemeranInput(button) {
-        button.parentElement.remove();
-    }
+    document.getElementById('addFilmPemeranModal').classList.remove('hidden');
+}
 
-    function showAllGenres() {
-    fetch('/genre')
-        .then(response => response.json())
-        .then(data => {
-            let genreList = data.map(genre => `<li class="border-b py-2">${genre.nama_genre}</li>`).join('');
-            openModal('Daftar Genre', `<ul class="list-disc pl-5">${genreList}</ul>`);
-        })
-        .catch(error => console.error('Error:', error));
-    }
+function closeAddFilmPemeranModal() {
+    document.getElementById('addFilmPemeranModal').classList.add('hidden');
+}
 
-    function showAllCategories() {
-        fetch('/kategori')
-            .then(response => response.json())
-            .then(data => {
-                let categoryList = data.map(category => `<li class="border-b py-2">${category.kategori}</li>`).join('');
-                openModal('Daftar Kategori', `<ul class="list-disc pl-5">${categoryList}</ul>`);
-            })
-            .catch(error => console.error('Error:', error));
-    }
+function addPemeranInput() {
+    let container = document.getElementById('pemeranContainer');
+    let div = document.createElement('div');
+    div.classList.add('mb-4', 'pemeran-input');
+    div.innerHTML = `
+        <label for="nama" class="block text-gray-700">Nama Pemeran</label>
+        <input type="text" name="nama[]" class="w-full p-2 border rounded-md" required>
+        <label for="pemeran" class="block text-gray-700">Peran</label>
+        <input type="text" name="pemeran[]" class="w-full p-2 border rounded-md" required>
+        <button type="button" onclick="removePemeranInput(this)" class="bg-red-500 text-white px-2 py-1 rounded mt-2">- Hapus</button>
+    `;
+    container.appendChild(div);
+}
+
+function removePemeranInput(button) {
+    button.parentElement.remove();
+}
+
 
     function openModal(title, content) {
         document.getElementById('modalTitle').innerText = title;

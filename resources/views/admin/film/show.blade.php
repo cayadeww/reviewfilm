@@ -29,7 +29,7 @@
                 
                 <!-- Video Trailer -->
                 <div class="flex justify-between items-center mb-5">
-                    <div class=" md:w-3/4">
+                    <div class="md:w-3/4">
                         @if (strpos($film->url_trailer, 'youtu.be') !== false)
                             <iframe width="100%" height="250"
                                 src="https://www.youtube.com/embed/{{ basename(parse_url($film->url_trailer, PHP_URL_PATH)) }}"
@@ -51,7 +51,16 @@
                 <p class="text-gray-700"><strong>Tahun Rilis:</strong> {{ $film->tahun_rilis }}</p>
                 <p class="text-gray-700"><strong>Durasi:</strong> {{ $film->durasi }} menit</p>
                 <p class="text-gray-700"><strong>Sutradara:</strong> {{ $film->sutradara }}</p>
-                
+                <!-- Pemeran Film -->
+                @if ($film->pemeran->isNotEmpty())
+                    <ul class="list-disc list-inside text-gray-700">
+                        @foreach ($film->pemeran as $p)
+                            <li>{{ $p->nama }} sebagai {{ $p->pemeran }}</li>
+                        @endforeach
+                    </ul>
+                @else
+                    <p class="text-gray-500">Belum ada data pemeran.</p>
+                @endif
             </div>
         </div>
     </div>

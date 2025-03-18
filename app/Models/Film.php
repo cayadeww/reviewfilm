@@ -41,6 +41,10 @@ class Film extends Model
     {
         return $this->belongsTo(Kategori::class, 'id_kategori');
     }
+    public function pemeran()
+{
+    return $this->hasMany(FilmPemeran::class, 'id_film');
+}
     public function komens()
     {
         return $this->hasMany(Komen::class, 'id_film'); // Pastikan foreign key benar

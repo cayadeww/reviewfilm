@@ -80,8 +80,9 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/film/{id}', [FilmController::class, 'update'])->name('film.update');
     Route::delete('/films/{id}', [FilmController::class, 'destroy'])->name('film.destroy');
     Route::get('/film/{id}', [FilmController::class, 'show'])->name('film.show');
+    Route::get('/film/{id}/edit', [FilmController::class, 'edit'])->name('film.edit'); // Menampilkan form edit
+    Route::put('/film/{id}', [FilmController::class, 'update'])->name('film.update');
 
-    
     // Genre Routes
     // Route::resource('genre',GenreController::class);
     

@@ -18,16 +18,34 @@ class FilmController extends Controller
         $films = Film::all(); // Menampilkan semua film
         $genres = Genre::all();
         $kategoris = Kategori::all();
-
+        $openModal = true; // Atur sesuai kebutuhan Anda, bisa true atau false
+    
         return view('admin.film.index', compact('films', 'genres', 'kategoris'));
     }
-
+    
     public function show($id)
     {
-        $film = Film::with(['genre', 'kategori'])->findOrFail($id);
+        $film = Film::with(['genre', 'kategori','pemeran'])->findOrFail($id);
         return view('admin.film.show', compact('film'));
     }
 
+    public function showModals()
+    {
+        $films = Film::with(['genre', 'kategori'])->get();
+        $genres = Genre::all();
+        $kategories = Kategori::all(); // Tambahkan ini jika belum ada
+    
+        return view('admin.film.modals', compact('films', 'genres', 'kategories'));
+    }
+
+    // Menampilkan form edit
+    public function edit($id)
+    {
+        $film = Film::findOrFail($id);
+        $genres = Genre::all();
+        $kategoris = Kategori::all();
+        return view('admin.film.edit', compact('film', 'genres', 'kategoris'));
+    }
 
     // Menyimpan film baru
     public function store(Request $request)
@@ -62,9 +80,36 @@ class FilmController extends Controller
         return redirect()->back()->with('success', 'Film berhasil ditambahkan!');
     }
 
+    // Memperbarui film
+    public function update(Request $request, $id)
+    {
+        $film = Film::findOrFail($id);
+
+        $request->validate([
+            'judul' => 'required',
+            'sinopsis' => 'required',
+            'url_trailer' => 'nullable|url',
+            'tahun_rilis' => 'required|integer',
+            'durasi' => 'required|integer',
+            'sutradara' => 'required',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'id_genre' => 'required',
+            'id_kategori' => 'required',
+        ]);
+
+        if ($request->hasFile('gambar')) {
+            if ($film->gambar) {
+                Storage::disk('public')->delete($film->gambar);
+            }
+            $film->gambar = $request->file('gambar')->store('film_images', 'public');
+        }
+
+        $film->update($request->except(['gambar']));
+
+        return redirect()->route('admin.film.index')->with('success', 'Film berhasil diperbarui!');
+    }
+
     // Menghapus film
-
-
     public function destroy($id)
     {
         $film = Film::findOrFail($id);

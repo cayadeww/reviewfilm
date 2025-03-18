@@ -11,10 +11,7 @@ class FilmPemeran extends Model
 
     protected $table = 'film_pemeran';
 
-    protected $fillable = [
-        'id_film',
-        'nama_pemeran',
-    ];
+    protected $fillable = ['id_film', 'nama', 'pemeran']; // Sesuai dengan kolom di tabel film_pemeran
 
     public function film()
     {

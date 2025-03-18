@@ -16,28 +16,31 @@ class FilmPemeranController extends Controller
         return view('admin.film.index', compact('films', 'pemerans'));
     }
 
-    
-    // Menyimpan pemeran baru
+
+
     public function store(Request $request)
     {
-
-        
+        // Validasi dan simpan data
         $request->validate([
-            'id_film' => 'required|exists:films,id',
-            'nama_pemeran' => 'required|array',
-            'nama_pemeran.*' => 'required|string|max:255'
+            'id_film' => 'required',
+            'nama.*' => 'required|string',
+            'pemeran.*' => 'required|string',
         ]);
-
-        foreach ($request->nama_pemeran as $nama) {
+    
+        // Simpan data pemeran
+        foreach ($request->nama as $key => $nama) {
             FilmPemeran::create([
                 'id_film' => $request->id_film,
-                'nama_pemeran' => $nama
+                'nama' => $nama,
+                'pemeran' => $request->pemeran[$key],
             ]);
         }
-
-        return redirect()->route('admin.film.index')->with('success', 'Genre berhasil ditambahkan!');
+    
+        // Redirect ke halaman admin.film.index
+        return redirect()->route('admin.film.index')->with('success', 'Pemeran berhasil ditambahkan.');
     }
-
+    
+    
     // Menghapus pemeran tertentu
     public function destroy($id)
     {

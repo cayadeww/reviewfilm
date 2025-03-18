@@ -22,23 +22,56 @@
                     @endif
                     <p><strong>🎥 Durasi:</strong> {{ floor($film->durasi / 60) }} jam {{ $film->durasi % 60 }} menit</p>
                 </div> 
-                
-                <!-- Trailer -->
                 @if ($film->url_trailer)
-                <div class="mt-6" x-data="{ open: false }">
-                    <button @click="open = true" class="flex items-center space-x-2 bg-blue-500 text-white px-5 py-3 rounded-lg hover:bg-blue-600">
+                <div class="mt-6" x-data="{ open: false, embedUrl: '' }">
+                    <button @click="open = true; embedUrl = '{{ $embed_url }}?autoplay=1&rel=0'" 
+                        class="flex items-center space-x-2 bg-pink-600 text-white px-5 py-3 rounded-lg hover:bg-pink-500 transition duration-300">
                         <span>🎬 Tonton Trailer</span>
                     </button>
+                
                     <div x-show="open" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" x-cloak>
-                        <div class="bg-white p-5 rounded-lg shadow-lg w-3/4 max-w-3xl relative">
-                            <button @click="open = false" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 text-2xl">&times;</button>
-                            <div class="aspect-w-16 aspect-h-9">
-                                <iframe class="w-full h-96" src="{{ $embed_url }}" frameborder="0" allowfullscreen></iframe>
+                        <div class="relative w-full max-w-4xl bg-gradient-to-b from-purple-900 to-pink-900 rounded-lg shadow-lg overflow-hidden">
+                            
+                            <!-- Header Mirip Browser -->
+                            <div class="flex items-center justify-between bg-pink-600 px-4 py-5">
+                                <div class="flex space-x-2">
+                                    <span class="w-3 h-3 bg-red-400 rounded-full"></span>
+                                    <span class="w-3 h-3 bg-yellow-400 rounded-full"></span>
+                                    <span class="w-3 h-3 bg-green-400 rounded-full"></span>
+                                </div>
+                                <!-- Tombol Close -->
+                                <button @click="open = false; embedUrl = ''" 
+                                    class="absolute top-2 right-2 text-gray-300 hover:text-white text-2xl transition duration-300">
+                                    &times;
+                                </button>
                             </div>
+                    
+                            <!-- Video Trailer -->
+                            <div class="relative w-full pt-[56.25%] bg-black">
+                                <iframe class="absolute top-0 left-0 w-full h-full rounded-lg"
+                                    :src="embedUrl"
+                                    frameborder="0"
+                                    allow="autoplay; encrypted-media"
+                                    allowfullscreen>
+                                </iframe>
+                            </div>
+                   
                         </div>
                     </div>
                 </div>
                 @endif
+                                <!-- Menampilkan Pemeran -->
+                                <div class="mt-6">
+                                    <h2 class="text-2xl font-semibold text-gray-800">Pemeran:</h2>
+                                    <ul class="mt-2 space-y-2">
+                                        @foreach ($film->pemeran as $pemeran)
+                                            <li class="text-gray-700">
+                                                <strong>{{ $pemeran->nama }}</strong> sebagai {{ $pemeran->pemeran }}
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>                
+                
         @if (Auth::check() && !$userHasRated)
                 <form action="{{ route('rating.store', $film->id) }}" method="POST" class="mt-4">
                     @csrf
